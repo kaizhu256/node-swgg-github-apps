@@ -1,0 +1,45 @@
+{
+    "author": "kai zhu <kaizhu256@gmail.com>",
+    "description": "this zero-dependency package will provide a (nodejs-compatible) swagger-client for github-apps's web-apis, with a working web-demo",
+    "devDependencies": {
+        "electron-lite": "kaizhu256/node-electron-lite#alpha",
+        "utility2": "kaizhu256/node-utility2#alpha"
+    },
+    "engines": {
+        "node": ">=4.0"
+    },
+    "githubRepoAlias": "swgg-io/node-swgg-github-apps",
+    "homepage": "https://github.com/kaizhu256/node-swgg-github-apps",
+    "keywords": [
+        "github-apps",
+        "swagger-client"
+    ],
+    "license": "MIT",
+    "main": "lib.swgg_github_apps.js",
+    "name": "swgg-github-apps",
+    "nameAliasPublish": "",
+    "nameLib": "swgg_github_apps",
+    "nameOriginal": "swgg-github-apps",
+    "os": [
+        "darwin",
+        "linux"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/kaizhu256/node-swgg-github-apps.git"
+    },
+    "scripts": {
+        "apidocRawCreate": "[ ! -f npm_scripts.sh ] || ./npm_scripts.sh shNpmScriptApidocRawCreate",
+        "apidocRawFetch": "[ ! -f npm_scripts.sh ] || ./npm_scripts.sh shNpmScriptApidocRawFetch",
+        "build-ci": "utility2 shReadmeTest build_ci.sh",
+        "env": "env",
+        "heroku-postbuild": "npm uninstall utility2 2>/dev/null; npm install kaizhu256/node-utility2#alpha && utility2 shDeployHeroku",
+        "nameAliasPublish": "",
+        "postinstall": "[ ! -f npm_scripts.sh ] || ./npm_scripts.sh shNpmScriptPostinstall",
+        "start": "PORT=${PORT:-8080} utility2 start test.js",
+        "test": "PORT=$(utility2 shServerPortRandom) utility2 test test.js"
+    },
+    "swggAll": "github-all",
+    "swggTags0": "github-apps",
+    "version": "2018.1.18"
+}
