@@ -18365,7 +18365,7 @@ return Utf8ArrayToStr(bff);
                 ));
                 local.objectSetOverride(options.swaggerJson, { info: {
                     title: options.packageJson.name,
-                    version: options.packageJson.version,
+                    version: 'v' + options.packageJson.version,
                     'x-swgg-description': options.packageJson.description,
                     'x-swgg-homepage': options.packageJson.homepage
                 } }, 2);
@@ -23626,20 +23626,21 @@ local.assetsDict['/assets.swgg.html'] = local.assetsDict['/assets.index.default.
     cursor: pointer;\n\
 }\n\
 .swggUiContainer button {\n\
-    border-radius: 5px;\n\
-    font-size: medium;\n\
+    font-weight: bold;\n\
+    text-decoration: underline;\n\
 }\n\
-.swggUiContainer input,\n\
-.swggUiContainer pre,\n\
-.swggUiContainer textarea {\n\
-    min-height: 1.5rem;\n\
-}\n\
+.swggUiContainer code,\n\
 .swggUiContainer pre,\n\
 .swggUiContainer textarea {\n\
     font-size: small;\n\
     line-height: 1.25rem;\n\
     max-height: 50rem;\n\
     overflow: auto;\n\
+}\n\
+.swggUiContainer input,\n\
+.swggUiContainer pre,\n\
+.swggUiContainer textarea {\n\
+    min-height: 1.5rem;\n\
 }\n\
 .swggUiContainer pre {\n\
     white-space: pre;\n\
@@ -23709,8 +23710,9 @@ local.assetsDict['/assets.swgg.html'] = local.assetsDict['/assets.index.default.
 /* important style */\n\
 /* background */\n\
 .swggUiContainer button {\n\
-    background: #393;\n\
+    background: #ddf;\n\
 }\n\
+.swggUiContainer code,\n\
 .swggUiContainer pre,\n\
 .swggUiContainer .operationDescription {\n\
     background: #ddd;\n\
@@ -23743,10 +23745,7 @@ local.assetsDict['/assets.swgg.html'] = local.assetsDict['/assets.index.default.
     background: #dfd;\n\
 }\n\
 .swggUiContainer .resourceDescription {\n\
-    background: #373;\n\
-}\n\
-.swggUiContainer .resourceDescription pre {\n\
-    background: #777;\n\
+    background: #9d9;\n\
 }\n\
 .swggUiContainer > .thead {\n\
     background: #7b5;\n\
@@ -23755,6 +23754,10 @@ local.assetsDict['/assets.swgg.html'] = local.assetsDict['/assets.index.default.
     background: transparent url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAqRJREFUeNrEVz1s00AUfnGXii5maMXoEUEHVwIpEkPNgkBdMnQoU5ytiKHJwpp2Q2JIO8DCUDOxIJFIVOoWZyJSh3pp1Q2PVVlcCVBH3ufeVZZ9Zye1Ay86nXV+ue/9fO/lheg/Se02X1rvksmbnTiKvuxQMBNgBnN4a/LCbmnUAP6JV58NCUsBC8CuAJxGPF47OgNqBaA93tolUhnx6jC4NxGwyOEwlccyAs+3kwdzKq0HDn2vEBTi8J2XpyMaywNDE157BhXUE3zJhlq8GKq+Zd2zaWHepPA8oN9XkfLmRdOiJV4XUUg/IyWncLjCYY/SHndV2u7zHr3bPKZtdxgboJOnthvrfGj/oMf3G0r7JVmNlLfKklmrt2MvvcNO7LFOhoFHfuAJI5o6ta10jpt5CQLgwXhXG2YIwvu+34qf78ybOjWTnWwkgR36d7JqJOrW0hHmNrKg9xhiS4+1jFmrxymh03B0w+6kURIAu3yHtOD5oaUNojMnGgbcctNvwdAnyxvxRR+/vaJnjzbpzcZX+nN1SdGv85i9eH8w3qPO+mdm/y4dnQ1iI8Fq6Nf4cxL6GWSjiFDSs0VRnxC5g0xSB2cgHpaseTxfqOv5uoHkNQ6Ha/N1Yz9mNMppEkEkYKj79q6uCq4bCHcSX3fJ0Vk/k9siASjCm1N6gZH6Ec9IXt2WkFES2K/ixoIyktJPAu/ptOA1SgO5zqtr6KASJPF0nMV8dgMsRhRPOcMwqQAOoi0VAIMLAEWJ6YYC1c8ibj1GP51RqwzYwZVMHQuvOzMCBUtb2tGHx5NAdLKqp5AX7Ng4d+Zi8AGDI9z1ijx9yaCH04y3GCP2S+QcvaGl+pcxyUBvinFlawoDQjHSelX8hQEoIrAq8p/mgC88HOS1YCl/BRgAmiD/1gn6Nu8AAAAASUVORK5CYII=) no-repeat left center;\n\
 }\n\
 /* border */\n\
+.swggUiContainer button {\n\
+    border: 1px solid #35b;\n\
+    border-radius: 5px;\n\
+}\n\
 .swggUiContainer input,\n\
 .swggUiContainer pre,\n\
 .swggUiContainer select,\n\
@@ -23769,32 +23772,20 @@ local.assetsDict['/assets.swgg.html'] = local.assetsDict['/assets.index.default.
 }\n\
 /* color */\n\
 .swggUiContainer a,\n\
-.swggUiContainer .label,\n\
-.swggUiContainer .resource > .thead > .td {\n\
-    color: #373;\n\
-}\n\
 .swggUiContainer button,\n\
-.swggUiContainer .operation > .thead > .td2,\n\
-.swggUiContainer .resourceDescription,\n\
-.swggUiContainer > .thead > .td1,\n\
-.swggUiContainer > .thead > .td4,\n\
-.swggUiContainer > .thead > .td5 {\n\
-    color: #eee;\n\
+.swggUiContainer .operation > .thead,\n\
+.swggUiContainer .resource > .thead {\n\
+    color: #35b;\n\
 }\n\
-.swggUiContainer .errorMessage {\n\
-    color: #c00;\n\
+.swggUiContainer .label {\n\
+    color: #373;\n\
 }\n\
 .swggUiContainer .multilinePlaceholderPre {\n\
     color: #999;\n\
 }\n\
-.swggUiContainer .resourceDescription a {\n\
-    color: #7d7;\n\
-}\n\
-.swggUiContainer .resourceDescription code {\n\
-    color: #ddf;\n\
-}\n\
-.swggUiContainer .resourceDescription strong {\n\
-    color: #bf0;\n\
+.swggUiContainer .operation > .thead > .td2,\n\
+.swggUiContainer > .thead > .td1 {\n\
+    color: #eee;\n\
 }\n\
 .swggUiContainer .styleColor777 {\n\
     color: #777;\n\
@@ -23873,7 +23864,7 @@ local.assetsDict['/assets.swgg.html'] = local.assetsDict['/assets.index.default.
     margin-bottom: 20px;\n\
 }\n\
 .swggUiContainer .operation button {\n\
-    margin-bottom: 50px;\n\
+    margin-bottom: 40px;\n\
     margin-top: 40px;\n\
 }\n\
 .swggUiContainer .operation > .thead > .td4 {\n\
@@ -23890,6 +23881,7 @@ local.assetsDict['/assets.swgg.html'] = local.assetsDict['/assets.index.default.
 .swggUiContainer input {\n\
     padding: 0 5px;\n\
 }\n\
+.swggUiContainer code,\n\
 .swggUiContainer pre,\n\
 .swggUiContainer textarea {\n\
     padding: 5px;\n\
@@ -23911,7 +23903,7 @@ local.assetsDict['/assets.swgg.html'] = local.assetsDict['/assets.index.default.
 }\n\
 .swggUiContainer > .thead > .td1 {\n\
     padding-left: 40px;\n\
-    padding-top: 6px;\n\
+    padding-top: 5px;\n\
 }\n\
 \n\
 \n\
@@ -23919,17 +23911,14 @@ local.assetsDict['/assets.swgg.html'] = local.assetsDict['/assets.index.default.
 /* hover */\n\
 .swggUiContainer a:hover,\n\
 .swggUiContainer > .thead > .td1:hover {\n\
-    color: #33d;\n\
+    color: #037;\n\
 }\n\
 .swggUiContainer button:hover {\n\
-    background: #77f;\n\
+    background: #bbf;\n\
 }\n\
 .swggUiContainer .operation > .thead:hover,\n\
 .swggUiContainer .resource > .thead > .td:hover {\n\
     background: #bbf;\n\
-}\n\
-.swggUiContainer .resourceDescription a:hover {\n\
-    color: #bbf;\n\
 }\n\
 \n\
 \n\
@@ -23965,17 +23954,18 @@ local.assetsDict['/assets.swgg.html'] = local.assetsDict['/assets.index.default.
 \n\
 \n\
 \n\
-/* .hasError */\n\
-.swggUiContainer button.hasError {\n\
-    background: #c00;\n\
+/* error */\n\
+.swggUiContainer button.hasError,\n\
+.swggUiContainer pre.hasError,\n\
+.swggUiContainer textarea.hasError {\n\
+    background: #fbb;\n\
 }\n\
 .swggUiContainer input.hasError,\n\
 .swggUiContainer select.hasError {\n\
     border: 5px solid #c00;\n\
 }\n\
-.swggUiContainer pre.hasError,\n\
-.swggUiContainer textarea.hasError {\n\
-    background: #fdd;\n\
+.swggUiContainer .errorMessage {\n\
+    color: #c00;\n\
 }\n\
 </style>\n\
 ')
