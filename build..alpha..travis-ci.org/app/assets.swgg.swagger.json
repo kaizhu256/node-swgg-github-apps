@@ -3,7 +3,7 @@
     "definitions": {},
     "info": {
         "title": "swgg-github-apps",
-        "version": "v2018.1.18",
+        "version": "2018.1.18",
         "x-swgg-description": "this zero-dependency package will provide a (nodejs-compatible) swagger-client for github-apps's web-apis, with a working web-demo",
         "x-swgg-homepage": "https://github.com/kaizhu256/node-swgg-github-apps"
     },

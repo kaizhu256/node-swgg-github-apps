@@ -113,6 +113,7 @@ instruction
 
 
 /* istanbul instrument in package swgg_github_apps */
+/* jslint-utility2 */
 /*jslint
     bitwise: true,
     browser: true,
