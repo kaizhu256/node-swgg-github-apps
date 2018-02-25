@@ -13135,7 +13135,7 @@ local.CSSLint = CSSLint; local.JSLINT = JSLINT, local.jslintEs6 = jslint; }());
         /*
          * this function will csslint the script with utiity2-specific rules
          */
-            var ii, current1, current2, message, previous1, previous2;
+            var current1, current2, ii, jj, message, previous1, previous2;
             // ignore comments
             script = script.replace((/^ *?\/\*[\S\s]*?\*\/ *?$/gm), function (match0) {
                 if (match0 === '/* validateLineSortedReset */') {
@@ -13150,22 +13150,30 @@ local.CSSLint = CSSLint; local.JSLINT = JSLINT, local.jslintEs6 = jslint; }());
             previous1 = '';
             previous2 = '';
             script.replace((/^.*?$/gm), function (line) {
-                ii += 1;
                 current1 = line;
+                ii += 1;
+                jj = 0;
                 message = '';
                 if (!current1) {
                     return;
                 }
+                // validate tab
+                if (current1.indexOf('\t') >= 0) {
+                    jj = jj || (current1.indexOf('\t') + 1);
+                    message = message || 'tab detected';
+                }
                 // validate double-whitespace
                 if ((/\S {2}/).test(current1)) {
+                    jj = jj || ((/\S {2}/).exec(current1).index + 2);
                     message = message || 'double whitespace';
                 }
                 // ignore indent
-                if (current1[0] === ' ') {
+                if (!message && current1[0] === ' ') {
                     return;
                 }
                 // validate multi-line-statement
                 if ((/[,;\{\}]./).test(current1)) {
+                    jj = jj || ((/[,;\{\}]./).exec(current1).index + 1);
                     message = message || 'multi-line statement';
                 }
                 // validateLineSortedReset
@@ -13182,6 +13190,7 @@ local.CSSLint = CSSLint; local.JSLINT = JSLINT, local.jslintEs6 = jslint; }());
                     .replace((/ \{$/gm), '   {')
                     .replace((/(^[\w*@]| \w)/gm), ' $1');
                 if (!(previous1 < current1)) {
+                    jj = jj || 1;
                     message = message ||
                         ('lines not sorted\n' + previous1 + '\n' + current1);
                 }
@@ -13191,6 +13200,7 @@ local.CSSLint = CSSLint; local.JSLINT = JSLINT, local.jslintEs6 = jslint; }());
                 if (current1 === '}') {
                     current2 = current2.slice(0, -3);
                     if (!(previous2 < current2)) {
+                        jj = jj || 1;
                         message = message ||
                             ('lines not sorted\n' + previous2 + '\n' + current2).trim();
                     }
@@ -13202,7 +13212,7 @@ local.CSSLint = CSSLint; local.JSLINT = JSLINT, local.jslintEs6 = jslint; }());
                     return;
                 }
                 local.errorList.push({
-                    col: line.length,
+                    col: jj,
                     line: ii,
                     message: message,
                     value: line
@@ -13214,7 +13224,7 @@ local.CSSLint = CSSLint; local.JSLINT = JSLINT, local.jslintEs6 = jslint; }());
         /*
          * this function will jslint / csslint the script and print any errors to stderr
          */
-            var ii, lintType, message, scriptParsed;
+            var ii, jj, lintType, message, scriptParsed;
             // cleanup errors
             local.errorList = [];
             local.errorText = '';
@@ -13227,18 +13237,21 @@ local.CSSLint = CSSLint; local.JSLINT = JSLINT, local.jslintEs6 = jslint; }());
                 ii = 0;
                 scriptParsed.replace((/^.*?$/gm), function (line) {
                     ii += 1;
+                    jj = 0;
                     message = '';
                     // validate indent
                     if (!(/^ * \*/).test(line) && ((/^ */).exec(line)[0].length % 4 !== 0)) {
+                        jj = jj || 1;
                         message = message || 'non 4-space indent';
                     }
                     // validate trailing-whitespace
                     if ((/ $| \\n\\$/).test(line)) {
-                        message = 'trailing whitespace';
+                        jj = jj || line.length;
+                        message = message || 'trailing whitespace';
                     }
                     if (message) {
                         local.errorList.push({
-                            col: line.length,
+                            col: jj,
                             line: ii,
                             message: message,
                             value: JSON.stringify(line)
@@ -13368,7 +13381,7 @@ local.CSSLint = CSSLint; local.JSLINT = JSLINT, local.jslintEs6 = jslint; }());
                 // validate previous < line
                 if (!(previous < line)) {
                     local.errorList.push({
-                        col: line.length,
+                        col: 0,
                         line: ii,
                         message: 'lines not sorted\n' + previous + '\n' + line,
                         value: line
@@ -13393,7 +13406,7 @@ local.CSSLint = CSSLint; local.JSLINT = JSLINT, local.jslintEs6 = jslint; }());
                 // validate previous < line
                 if (!(previous < line)) {
                     local.errorList.push({
-                        col: line.length,
+                        col: 0,
                         line: ii,
                         message: 'lines not sorted\n' + previous + '\n' + line,
                         value: line
@@ -15136,6 +15149,11 @@ textarea {\n\
 pre {\n\
     overflow-wrap: break-word;\n\
     white-space: pre-wrap;\n\
+}\n\
+.textOverflowEllipsis {\n\
+    overflow: hidden;\n\
+    text-overflow: ellipsis;\n\
+    white-space: nowrap;\n\
 }\n\
 .uiAnimateShake {\n\
     animation-duration: 500ms;\n\
@@ -19212,40 +19230,8 @@ return Utf8ArrayToStr(bff);
                     local.jslintAndPrint(script, file);
                 }
                 break;
-            case '.html':
             case '.sh':
-                if (file.replace((/^.*\./), '.') === '.sh' &&
-                        (/^\/\* jslint-utility2 \*\/$|^# jslint-utility2$/m).test(script)) {
-                    local.jslintAndPrint(script, file);
-                }
-                // csslint <style> tag
-                script.replace(
-                    (/\n<style>\n([\S\s]+?)\n<\/style>\n/g),
-                    function (match0, match1, ii, text) {
-                        match0 = match1;
-                        // recurse
-                        local.jslintAndPrintConditional(
-                            // preserve lineno
-                            text.slice(0, ii).replace((/.+/g), '') + match0,
-                            file + '.css',
-                            mode
-                        );
-                    }
-                );
-                // jslint <script> tag
-                script.replace(
-                    (/\n(?:\/\/ )?<script>\n([\S\s]+?)\n(?:\/\/ )?<\/script>\n/g),
-                    function (match0, match1, ii, text) {
-                        match0 = match1;
-                        // recurse
-                        local.jslintAndPrintConditional(
-                            // preserve lineno
-                            text.slice(0, ii).replace((/.+/g), '') + match0,
-                            file + '.js',
-                            mode
-                        );
-                    }
-                );
+                local.jslintAndPrint(script, file);
                 break;
             case '.js':
                 if ((script.indexOf('/*jslint') >= 0 && !local.global.__coverage__) ||
@@ -19254,6 +19240,40 @@ return Utf8ArrayToStr(bff);
                 }
                 break;
             }
+            // csslint <style>...</style>
+            script.replace(
+                (/^<style>(?:\\n\\)?\n([\S\s]+?)\n<\\?\/style>(?:\\n\\)?$/gm),
+                function (match0, match1, ii, text) {
+                    match0 = match1;
+                    local.jslintAndPrint(
+                        // preserve lineno
+                        text.slice(0, ii).replace((/.+/g), '') + '\n' + match0
+                            // filter \\n\\
+                            .replace((/\\n\\$/gm), '')
+                            // filter ' + ... + '\\
+                            .replace((/^' \+ .*? \+ '\\$/gm), ''),
+                        file + '.css',
+                        mode
+                    );
+                }
+            );
+            // jslint <script>...</script>
+            script.replace(
+                (/^(?:\/\/ )?<script>(?:\\n\\)?\n([\S\s]+?)\n(?:\/\/ )?<\\?\/script>(?:\\n\\)?$/gm),
+                function (match0, match1, ii, text) {
+                    match0 = match1;
+                    local.jslintAndPrint(
+                        // preserve lineno
+                        text.slice(0, ii).replace((/.+/g), '') + '\n' + match0
+                            // filter \\n\\
+                            .replace((/\\n\\$/gm), '')
+                            // filter ' + ... + '\\
+                            .replace((/^' \+ .*? \+ '\\$/gm), ''),
+                        file + '.js',
+                        mode
+                    );
+                }
+            );
             return script;
         };
 
@@ -20581,7 +20601,7 @@ vendor\\)s\\{0,1\\}\\(\\b\\|_\\)\
             ['index', 'index.default'].forEach(function (element) {
                 local.assetsDict['/' + element + '.html'] =
                     local.assetsDict['/' + element + '.html'] ||
-                    local.jslintAndPrintConditional(local.templateRender(
+                    local.templateRender(
                         // uncomment utility2-comment
                         local.assetsDict['/assets.' + element + '.template.html'].replace(
                             (/<!-- utility2-comment\b([\S\s]+?)\butility2-comment -->/g),
@@ -20593,7 +20613,7 @@ vendor\\)s\\{0,1\\}\\(\\b\\|_\\)\
                                 local.env.NODE_ENV === 'rollup' ||
                                 local.env.NODE_ENV === 'production'
                         }
-                    ), '/' + element + '.html');
+                    );
             });
             local.assetsDict['/'] = local.assetsDict['/index.html'];
             // init assets.app.js
@@ -20666,12 +20686,6 @@ instruction\n\
                     '\n/* script-end ' + key + ' */\n';
             }).join('\n\n\n');
             local.objectSetDefault(module.exports, local);
-            // jslint assetsDict
-            Object.keys(local.assetsDict).sort().forEach(function (key) {
-                setTimeout(function () {
-                    local.jslintAndPrintConditional(local.assetsDict[key], key);
-                });
-            });
             return module.exports;
         };
 
@@ -22693,6 +22707,7 @@ instruction\n\
 
 /* script-begin /assets.swgg.js */
 /* istanbul instrument in package swgg */
+/* jslint-utility2 */
 /*jslint
     bitwise: true,
     browser: true,
@@ -23559,7 +23574,7 @@ Object.keys(swgg.apiDict).sort().forEach(function (key) {\n\
 });\n\
 console.log("initialized nodejs swgg-client");\n\
 </pre>\n\
-<div class="reset styleColor777">[ <span>base url</span>: {{basePath}} ]</div>\n\
+<div class="color777 reset">[ <span>base url</span>: {{basePath}} ]</div>\n\
 {{/if urlSwaggerJson}}\n\
 <div id="swggAjaxProgressDiv1" style="text-align: center;">\n\
     <span>{{ajaxProgressText}}</span>\n\
@@ -23586,7 +23601,7 @@ local.templateUiOperation = '\
         class="td td3"\n\
         {{#if deprecated}}style="text-decoration: line-through;"{{/if deprecated}}\n\
     >{{_path}}</span>\n\
-    <span class="styleColor777 td td4">{{summary}}</span>\n\
+    <span class="color777 td td4 textOverflowEllipsis">{{summary}}</span>\n\
 </div>\n\
 <form accept-charset="UTF-8"\n\
     class="content uiAnimateSlide"\n\
@@ -23601,7 +23616,7 @@ local.templateUiOperation = '\
     </div>\n\
     {{#if parameters.length}}\n\
     <h4 class="label">parameters</h4>\n\
-    <div class="schemaP styleBorderBottom1px styleColor777 tr">\n\
+    <div class="color777 schemaP styleBorderBottom1px tr">\n\
         <span class="td td1">name and description</span>\n\
         <span class="td td2">data type</span>\n\
         <span class="td td3">value</span>\n\
@@ -23612,7 +23627,7 @@ local.templateUiOperation = '\
     {{/each parameters}}\n\
     {{/if parameters.length}}\n\
     <h4 class="label">response messages</h4>\n\
-    <div class="schemaResponse styleBorderBottom1px styleColor777 tr">\n\
+    <div class="color777 schemaResponse styleBorderBottom1px tr">\n\
         <span class="td td1">http status code</span>\n\
         <span class="td td2">reason</span>\n\
     </div>\n\
@@ -23648,7 +23663,7 @@ local.templateUiParameter = '\
     {{#if required}}<br><span style="font-weight: bold;">(required)</span>{{/if required}}\n\
     {{#if description}}\n\
     <br>\n\
-    <span class="markdown styleColor777">{{description markdownToHtml}}</span>\n\
+    <span class="color777 markdown">{{description markdownToHtml}}</span>\n\
     {{/if description}}\n\
 </span>\n\
 <span class="td td2">{{type2}}{{#if format2}}<br>({{format2}}){{/if format2}}</span>\n\
@@ -23722,7 +23737,7 @@ local.templateUiResource = '\
     id="{{id}}"\n\
 >\n\
 <h3 class="thead">\n\
-    <span class="onEventResourceDisplayAction td td1" tabindex="0">\n\
+    <span class="onEventResourceDisplayAction td td1 textOverflowEllipsis" tabindex="0">\n\
         <div class="onEventResourceDisplayAction resourceIi">{{ii}}.</div>{{name}}:\n\
         <span class="onEventResourceDisplayAction resourceSummary">{{summary}}</span>\n\
     </span>\n\
@@ -23785,9 +23800,6 @@ local.assetsDict['/assets.swgg.html'] = local.assetsDict['/assets.index.default.
     outline: none;\n\
 }\n\
 /* jslint-ignore-end */\n\
-\n\
-\n\
-\n\
 /* validateLineSortedReset */\n\
 /* general */\n\
 .swggUiContainer {\n\
@@ -23798,7 +23810,8 @@ local.assetsDict['/assets.swgg.html'] = local.assetsDict['/assets.index.default.
 .swggUiContainer .resource > .thead {\n\
     cursor: pointer;\n\
 }\n\
-.swggUiContainer button {\n\
+.swggUiContainer button,\n\
+.swggUiContainer .operation > .thead > .td3 {\n\
     font-weight: bold;\n\
     text-decoration: underline;\n\
 }\n\
@@ -23876,11 +23889,7 @@ local.assetsDict['/assets.swgg.html'] = local.assetsDict['/assets.index.default.
 .swggUiContainer > .thead > .td1 {\n\
     font-size: x-large;\n\
 }\n\
-\n\
-\n\
-\n\
 /* validateLineSortedReset */\n\
-/* important style */\n\
 /* background */\n\
 .swggUiContainer button {\n\
     background: #ddf;\n\
@@ -23955,6 +23964,9 @@ local.assetsDict['/assets.swgg.html'] = local.assetsDict['/assets.index.default.
 .swggUiContainer code {\n\
     color: #333;\n\
 }\n\
+.swggUiContainer .color777 {\n\
+    color: #777;\n\
+}\n\
 .swggUiContainer .label {\n\
     color: #373;\n\
 }\n\
@@ -23965,13 +23977,11 @@ local.assetsDict['/assets.swgg.html'] = local.assetsDict['/assets.index.default.
 .swggUiContainer > .thead > .td1 {\n\
     color: #eee;\n\
 }\n\
-.swggUiContainer .styleColor777 {\n\
-    color: #777;\n\
-}\n\
 /* validateLineSortedReset */\n\
 /* display */\n\
 .swggUiContainer .onEventResourceDisplayAction {\n\
     display: inline-block;\n\
+    text-decoration: underline;\n\
 }\n\
 .swggUiContainer .thead,\n\
 .swggUiContainer .tr {\n\
@@ -24028,6 +24038,7 @@ local.assetsDict['/assets.swgg.html'] = local.assetsDict['/assets.index.default.
 .swggUiContainer .td .onEventResourceDisplayAction {\n\
     margin-bottom: 0;\n\
 }\n\
+.swggUiContainer ol,\n\
 .swggUiContainer ul,\n\
 .swggUiContainer .operation > .thead > .td1,\n\
 .swggUiContainer .td {\n\
@@ -24035,10 +24046,6 @@ local.assetsDict['/assets.swgg.html'] = local.assetsDict['/assets.index.default.
 }\n\
 .swggUiContainer .label {\n\
     margin-bottom: 1px;\n\
-}\n\
-.swggUiContainer .markdown ol,\n\
-.swggUiContainer .markdown ul {\n\
-    margin-left: 20px;\n\
 }\n\
 .swggUiContainer .onEventOperationAjax,\n\
 .swggUiContainer .schemaP {\n\
@@ -24089,25 +24096,6 @@ local.assetsDict['/assets.swgg.html'] = local.assetsDict['/assets.index.default.
     padding-left: 40px;\n\
     padding-top: 5px;\n\
 }\n\
-\n\
-\n\
-\n\
-/* validateLineSortedReset */\n\
-/* hover */\n\
-.swggUiContainer a:hover,\n\
-.swggUiContainer > .thead > .td1:hover {\n\
-    color: #037;\n\
-}\n\
-.swggUiContainer button:hover {\n\
-    background: #bbf;\n\
-}\n\
-.swggUiContainer .operation > .thead:hover,\n\
-.swggUiContainer .resource > .thead > .td:hover {\n\
-    background: #bbf;\n\
-}\n\
-\n\
-\n\
-\n\
 /* validateLineSortedReset */\n\
 /* @media */\n\
 @media screen and (max-width: 640px) {\n\
@@ -24127,20 +24115,17 @@ local.assetsDict['/assets.swgg.html'] = local.assetsDict['/assets.index.default.
         width: 100%;\n\
     }\n\
 }\n\
-\n\
-\n\
-\n\
 /* validateLineSortedReset */\n\
-/* textOverflowElipsis */\n\
-.swggUiContainer .operation > .thead > .td4,\n\
-.swggUiContainer .resource > .thead > .td1 {\n\
-    overflow: hidden;\n\
-    text-overflow: ellipsis;\n\
-    white-space: nowrap;\n\
+/* hover */\n\
+.swggUiContainer a:hover,\n\
+.swggUiContainer > .thead > .td1:hover {\n\
+    color: #037;\n\
 }\n\
-\n\
-\n\
-\n\
+.swggUiContainer button:hover,\n\
+.swggUiContainer .operation > .thead:hover,\n\
+.swggUiContainer .resource > .thead > .td:hover {\n\
+    background: #bbf;\n\
+}\n\
 /* validateLineSortedReset */\n\
 /* error */\n\
 .swggUiContainer button.hasError,\n\
@@ -24185,6 +24170,7 @@ document.querySelector(".swggUiContainer > .thead > .td2").value =\n\
 </script>\n\
 <script src="assets.utility2.rollup.js"></script>\n\
 <script>\n\
+/*jslint browser: true*/\n\
 window.local = window.local || window.swgg;\n\
 window.swgg.uiEventListenerDict[".onEventUiReload"]({ swggInit: true });\n\
 </script>\n\
@@ -28070,6 +28056,16 @@ pre {\\n\
 \\\n\
 }\\n\
 \\\n\
+.textOverflowEllipsis {\\n\
+\\\n\
+    overflow: hidden;\\n\
+\\\n\
+    text-overflow: ellipsis;\\n\
+\\\n\
+    white-space: nowrap;\\n\
+\\\n\
+}\\n\
+\\\n\
 .uiAnimateShake {\\n\
 \\\n\
     animation-duration: 500ms;\\n\
@@ -28615,6 +28611,11 @@ textarea {\n\
 pre {\n\
     overflow-wrap: break-word;\n\
     white-space: pre-wrap;\n\
+}\n\
+.textOverflowEllipsis {\n\
+    overflow: hidden;\n\
+    text-overflow: ellipsis;\n\
+    white-space: nowrap;\n\
 }\n\
 .uiAnimateShake {\n\
     animation-duration: 500ms;\n\
