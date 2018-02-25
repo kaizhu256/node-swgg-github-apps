@@ -7284,7 +7284,7 @@ e){e+="}",this._tokenStream=new v(e,m),this._readDeclarations()}};for(t in n)Obj
 ,"-o-animation-play-state":"[ running | paused ]#",appearance:"none | auto","-moz-appearance"
 :"none | button | button-arrow-down | button-arrow-next | button-arrow-previous | button-arrow-up | button-bevel | button-focus | caret | checkbox | checkbox-container | checkbox-label | checkmenuitem | dualbutton | groupbox | listbox | listitem | menuarrow | menubar | menucheckbox | menuimage | menuitem | menuitemtext | menulist | menulist-button | menulist-text | menulist-textfield | menupopup | menuradio | menuseparator | meterbar | meterchunk | progressbar | progressbar-vertical | progresschunk | progresschunk-vertical | radio | radio-container | radio-label | radiomenuitem | range | range-thumb | resizer | resizerpanel | scale-horizontal | scalethumbend | scalethumb-horizontal | scalethumbstart | scalethumbtick | scalethumb-vertical | scale-vertical | scrollbarbutton-down | scrollbarbutton-left | scrollbarbutton-right | scrollbarbutton-up | scrollbarthumb-horizontal | scrollbarthumb-vertical | scrollbartrack-horizontal | scrollbartrack-vertical | searchfield | separator | sheet | spinner | spinner-downbutton | spinner-textfield | spinner-upbutton | splitter | statusbar | statusbarpanel | tab | tabpanel | tabpanels | tab-scroll-arrow-back | tab-scroll-arrow-forward | textfield | textfield-multiline | toolbar | toolbarbutton | toolbarbutton-dropdown | toolbargripper | toolbox | tooltip | treeheader | treeheadercell | treeheadersortarrow | treeitem | treeline | treetwisty | treetwistyopen | treeview | -moz-mac-unified-toolbar | -moz-win-borderless-glass | -moz-win-browsertabbar-toolbox | -moz-win-communicationstext | -moz-win-communications-toolbox | -moz-win-exclude-glass | -moz-win-glass | -moz-win-mediatext | -moz-win-media-toolbox | -moz-window-button-box | -moz-window-button-box-maximized | -moz-window-button-close | -moz-window-button-maximize | -moz-window-button-minimize | -moz-window-button-restore | -moz-window-frame-bottom | -moz-window-frame-left | -moz-window-frame-right | -moz-window-titlebar | -moz-window-titlebar-maximized"
 ,"-ms-appearance":"none | icon | window | desktop | workspace | document | tooltip | dialog | button | push-button | hyperlink | radio | radio-button | checkbox | menu-item | tab | menu | menubar | pull-down-menu | pop-up-menu | list-menu | radio-group | checkbox-group | outline-tree | range | field | combo-box | signature | password | normal"
-,"-webkit-appearance":"none | button | button-bevel | caps-lock-indicator | caret | checkbox | default-button | listbox	| listitem | media-fullscreen-button | media-mute-button | media-play-button | media-seek-back-button	| media-seek-forward-button	| media-slider | media-sliderthumb | menulist	| menulist-button	| menulist-text	| menulist-textfield | push-button	| radio	| searchfield	| searchfield-cancel-button	| searchfield-decoration | searchfield-results-button | searchfield-results-decoration | slider-horizontal | slider-vertical | sliderthumb-horizontal | sliderthumb-vertical	| square-button	| textarea	| textfield	| scrollbarbutton-down | scrollbarbutton-left | scrollbarbutton-right | scrollbarbutton-up | scrollbargripper-horizontal | scrollbargripper-vertical | scrollbarthumb-horizontal | scrollbarthumb-vertical | scrollbartrack-horizontal | scrollbartrack-vertical"
+,"-webkit-appearance":"none | button | button-bevel | caps-lock-indicator | caret | checkbox | default-button | listbox\t| listitem | media-fullscreen-button | media-mute-button | media-play-button | media-seek-back-button\t| media-seek-forward-button\t| media-slider | media-sliderthumb | menulist\t| menulist-button\t| menulist-text\t| menulist-textfield | push-button\t| radio\t| searchfield\t| searchfield-cancel-button\t| searchfield-decoration | searchfield-results-button | searchfield-results-decoration | slider-horizontal | slider-vertical | sliderthumb-horizontal | sliderthumb-vertical\t| square-button\t| textarea\t| textfield\t| scrollbarbutton-down | scrollbarbutton-left | scrollbarbutton-right | scrollbarbutton-up | scrollbargripper-horizontal | scrollbargripper-vertical | scrollbarthumb-horizontal | scrollbarthumb-vertical | scrollbartrack-horizontal | scrollbartrack-vertical"
 ,"-o-appearance":"none | window | desktop | workspace | document | tooltip | dialog | button | push-button | hyperlink | radio | radio-button | checkbox | menu-item | tab | menu | menubar | pull-down-menu | pop-up-menu | list-menu | radio-group | checkbox-group | outline-tree | range | field | combo-box | signature | password | normal"
 ,azimuth:"<azimuth>","backface-visibility":"visible | hidden",background:1,"background-attachment"
 :"<attachment>#","background-clip":"<box>#","background-color":"<color>","background-image"
@@ -13157,11 +13157,6 @@ local.CSSLint = CSSLint; local.JSLINT = JSLINT, local.jslintEs6 = jslint; }());
                 if (!current1) {
                     return;
                 }
-                // validate tab
-                if (current1.indexOf('\t') >= 0) {
-                    jj = jj || (current1.indexOf('\t') + 1);
-                    message = message || 'tab detected';
-                }
                 // validate double-whitespace
                 if ((/\S {2}/).test(current1)) {
                     jj = jj || ((/\S {2}/).exec(current1).index + 2);
@@ -13248,6 +13243,11 @@ local.CSSLint = CSSLint; local.JSLINT = JSLINT, local.jslintEs6 = jslint; }());
                     if ((/ $| \\n\\$/).test(line)) {
                         jj = jj || line.length;
                         message = message || 'trailing whitespace';
+                    }
+                    // validate tab
+                    if (line.indexOf('\t') >= 0) {
+                        jj = jj || (line.indexOf('\t') + 1);
+                        message = message || 'tab detected';
                     }
                     if (message) {
                         local.errorList.push({
@@ -13370,25 +13370,7 @@ local.CSSLint = CSSLint; local.JSLINT = JSLINT, local.jslintEs6 = jslint; }());
         /*
          * this function will jslint the script with utiity2-specific rules
          */
-            var ii, previous;
-            ii = 0;
-            previous = '';
-            script.replace((/^.*?$/gm), function (line) {
-                ii += 1;
-                if (!(/^sh\w+?\(\) \{/).test(line)) {
-                    return;
-                }
-                // validate previous < line
-                if (!(previous < line)) {
-                    local.errorList.push({
-                        col: 0,
-                        line: ii,
-                        message: 'lines not sorted\n' + previous + '\n' + line,
-                        value: line
-                    });
-                }
-                previous = line;
-            });
+            return script;
         };
 
         local.shlintUtility2 = function (script) {
