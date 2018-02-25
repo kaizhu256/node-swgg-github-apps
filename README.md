@@ -57,8 +57,8 @@ this zero-dependency package will provide a (nodejs-compatible) swagger-client f
 #### todo
 - none
 
-#### changelog for v2018.2.24
-- npm publish v2018.2.24
+#### changelog for v2018.2.25-alpha
+- npm publish v2018.2.25-alpha
 - create initial package
 - none
 
@@ -342,7 +342,7 @@ instruction
     },
     "swggAll": "github-all",
     "swggTags0": "github-apps",
-    "version": "2018.2.24"
+    "version": "2018.2.25-alpha"
 }
 ```
 
