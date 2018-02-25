@@ -55,10 +55,10 @@ this zero-dependency package will provide a (nodejs-compatible) swagger-client f
 [![apidoc](https://kaizhu256.github.io/node-swgg-github-apps/build/screenshot.buildCi.browser.%252Ftmp%252Fbuild%252Fapidoc.html.png)](https://kaizhu256.github.io/node-swgg-github-apps/build..beta..travis-ci.org/apidoc.html)
 
 #### todo
-- npm publish v2018.1.18
 - none
 
-#### changelog for v2018.1.18
+#### changelog for v2018.2.24
+- npm publish v2018.2.24
 - create initial package
 - none
 
@@ -113,6 +113,7 @@ instruction
 
 
 /* istanbul instrument in package swgg_github_apps */
+/* jslint-utility2 */
 /*jslint
     bitwise: true,
     browser: true,
@@ -341,7 +342,7 @@ instruction
     },
     "swggAll": "github-all",
     "swggTags0": "github-apps",
-    "version": "2018.1.18"
+    "version": "2018.2.24"
 }
 ```
 
