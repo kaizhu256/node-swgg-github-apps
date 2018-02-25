@@ -65,6 +65,11 @@ pre {
     overflow-wrap: break-word;
     white-space: pre-wrap;
 }
+.textOverflowEllipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 .uiAnimateShake {
     animation-duration: 500ms;
     animation-name: uiAnimateShake;
@@ -104,9 +109,6 @@ pre {
     outline: none;
 }
 /* jslint-ignore-end */
-
-
-
 /* validateLineSortedReset */
 /* general */
 .swggUiContainer {
@@ -117,7 +119,8 @@ pre {
 .swggUiContainer .resource > .thead {
     cursor: pointer;
 }
-.swggUiContainer button {
+.swggUiContainer button,
+.swggUiContainer .operation > .thead > .td3 {
     font-weight: bold;
     text-decoration: underline;
 }
@@ -195,11 +198,7 @@ pre {
 .swggUiContainer > .thead > .td1 {
     font-size: x-large;
 }
-
-
-
 /* validateLineSortedReset */
-/* important style */
 /* background */
 .swggUiContainer button {
     background: #ddf;
@@ -274,6 +273,9 @@ pre {
 .swggUiContainer code {
     color: #333;
 }
+.swggUiContainer .color777 {
+    color: #777;
+}
 .swggUiContainer .label {
     color: #373;
 }
@@ -284,13 +286,11 @@ pre {
 .swggUiContainer > .thead > .td1 {
     color: #eee;
 }
-.swggUiContainer .styleColor777 {
-    color: #777;
-}
 /* validateLineSortedReset */
 /* display */
 .swggUiContainer .onEventResourceDisplayAction {
     display: inline-block;
+    text-decoration: underline;
 }
 .swggUiContainer .thead,
 .swggUiContainer .tr {
@@ -347,6 +347,7 @@ pre {
 .swggUiContainer .td .onEventResourceDisplayAction {
     margin-bottom: 0;
 }
+.swggUiContainer ol,
 .swggUiContainer ul,
 .swggUiContainer .operation > .thead > .td1,
 .swggUiContainer .td {
@@ -354,10 +355,6 @@ pre {
 }
 .swggUiContainer .label {
     margin-bottom: 1px;
-}
-.swggUiContainer .markdown ol,
-.swggUiContainer .markdown ul {
-    margin-left: 20px;
 }
 .swggUiContainer .onEventOperationAjax,
 .swggUiContainer .schemaP {
@@ -408,25 +405,6 @@ pre {
     padding-left: 40px;
     padding-top: 5px;
 }
-
-
-
-/* validateLineSortedReset */
-/* hover */
-.swggUiContainer a:hover,
-.swggUiContainer > .thead > .td1:hover {
-    color: #037;
-}
-.swggUiContainer button:hover {
-    background: #bbf;
-}
-.swggUiContainer .operation > .thead:hover,
-.swggUiContainer .resource > .thead > .td:hover {
-    background: #bbf;
-}
-
-
-
 /* validateLineSortedReset */
 /* @media */
 @media screen and (max-width: 640px) {
@@ -446,20 +424,17 @@ pre {
         width: 100%;
     }
 }
-
-
-
 /* validateLineSortedReset */
-/* textOverflowElipsis */
-.swggUiContainer .operation > .thead > .td4,
-.swggUiContainer .resource > .thead > .td1 {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+/* hover */
+.swggUiContainer a:hover,
+.swggUiContainer > .thead > .td1:hover {
+    color: #037;
 }
-
-
-
+.swggUiContainer button:hover,
+.swggUiContainer .operation > .thead:hover,
+.swggUiContainer .resource > .thead > .td:hover {
+    background: #bbf;
+}
 /* validateLineSortedReset */
 /* error */
 .swggUiContainer button.hasError,
@@ -587,6 +562,7 @@ document.querySelector(".swggUiContainer > .thead > .td2").value =
 </script>
 <script src="assets.utility2.rollup.js"></script>
 <script>
+/*jslint browser: true*/
 window.local = window.local || window.swgg;
 window.swgg.uiEventListenerDict[".onEventUiReload"]({ swggInit: true });
 </script>
